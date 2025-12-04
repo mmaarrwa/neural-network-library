@@ -1,7 +1,7 @@
 import numpy as np
 
 class SGD:
-    def _init_(self, learning_rate=0.01):
+    def __init__(self, learning_rate=0.01):
         # Stores the learning rate (η) centrally
         self.learning_rate = learning_rate
 

@@ -5,7 +5,7 @@ class Loss_MSE:
     # Note: This class does not inherit from Layer because it is not 
     # a sequential component of the network's layer chain.
 
-    def _init_(self):
+    def __init__(self):
         # The loss function does not need any parameters to store 
         # (no W or b)
         pass

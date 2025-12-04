@@ -1,6 +1,6 @@
 import numpy as np
 # Importing the Base Layer class from the layers module
-from layers import Layer 
+from .layers import Layer
 
 ## 1. Sigmoid Function
 class Sigmoid(Layer):

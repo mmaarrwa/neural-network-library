@@ -5,7 +5,7 @@ import numpy as np
 
 ## 1. Base Layer Class (The Template)
 class Layer:
-    def _init_(self):
+    def __init__(self):
         # Stores input data for gradient calculation in the backward pass
         self.input = None
         # Stores output data for use in the next layer or activation derivative
@@ -22,10 +22,10 @@ class Layer:
 
 ## 2. Dense Layer (Fully Connected) - Handles Gradients, NO UPDATE
 class Dense(Layer):
-    def _init_(self, input_size, output_size):
-        super()._init_()
+    def __init__(self, input_size, output_size):
+        super().__init__()
         # Weights (W): Parameters to be learned
-        self.weights = np.random.randn(input_size, output_size) * 0.01
+        self.weights = np.random.randn(input_size, output_size)
         # Biases (b): Parameters to be learned
         self.bias = np.zeros((1, output_size))
         
