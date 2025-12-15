@@ -25,7 +25,14 @@ class Dense(Layer):
     def __init__(self, input_size, output_size):
         super().__init__()
         # Weights (W): Parameters to be learned
-        self.weights = np.random.randn(input_size, output_size)
+        #to solve the problem of the initialization
+        #where in the xor problem multiplying with 0.01 was to small that leads to 
+        #the error is constant and the model is not learning
+        #while i the autoencoder where the input was 784 if we did not multiply with 0.01 the
+        #wights was too large
+        #xavier initialization is the solution for that
+        scale = np.sqrt(2.0 / input_size)
+        self.weights = np.random.randn(input_size, output_size) * scale
         # Biases (b): Parameters to be learned
         self.bias = np.zeros((1, output_size))
         

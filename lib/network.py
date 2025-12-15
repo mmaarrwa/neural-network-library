@@ -36,41 +36,51 @@ class Network:
 
     def train(self, x_train, y_train, epochs, batch_size=32):
         """
-        Main training loop:
-        1. Forward pass
-        2. Calculate Loss
-        3. Backward pass
-        4. Update weights
+        Main training loop with Mini-Batch Gradient Descent.
         """
-        # Determine number of batches
         samples = len(x_train)
+        loss_history = [] # 1. Initialize list to store loss values
         
         for i in range(epochs):
-            loss = 0
+            # Optional: Shuffle data for better training
+            indices = np.random.permutation(samples)
+            x_train = x_train[indices]
+            y_train = y_train[indices]
             
-            # Simple Batch Gradient Descent (or Full Batch if batch_size >= samples)
-            # For a foundational library, we can loop slightly simpler:
+            epoch_loss = 0
+            num_batches = 0
             
-            # 1. Forward Pass
-            output = self.predict(x_train)
-            
-            # 2. Calculate Loss (for display)
-            loss = self.loss.forward(y_train, output)
-            
-            # 3. Backward Pass
-            # First, calculate the initial gradient from the loss function
-            grad = self.loss.backward(y_train, output)
-            
-            # Then propagate backward through all layers (in reverse order)
-            for layer in reversed(self.layers):
-                grad = layer.backward(grad)
+            # Mini-batch loop
+            for j in range(0, samples, batch_size):
+                # Create batch
+                x_batch = x_train[j : j + batch_size]
+                y_batch = y_train[j : j + batch_size]
                 
-            # 4. Update Parameters
-            # Call the update method on all layers (Dense layers will use the optimizer)
-            for layer in self.layers:
-                if hasattr(layer, 'update'):
-                    layer.update()
+                # Forward Pass
+                output = self.predict(x_batch)
+                
+                # Calculate Loss
+                loss = self.loss.forward(y_batch, output)
+                epoch_loss += loss
+                num_batches += 1
+                
+                # Backward Pass
+                grad = self.loss.backward(y_batch, output)
+                for layer in reversed(self.layers):
+                    grad = layer.backward(grad)
+                    
+                # Update Parameters
+                for layer in self.layers:
+                    if hasattr(layer, 'update'):
+                        layer.update()
             
-            # Optional: Print progress every 100 epochs
-            if (i + 1) % 100 == 0:
-                print(f"Epoch {i+1}/{epochs} error={loss}")
+            # Calculate average loss for the epoch
+            avg_loss = epoch_loss / num_batches
+            
+            # 2. Append to history list
+            loss_history.append(avg_loss)
+            
+            print(f"Epoch {i+1}/{epochs} error={avg_loss:.6f}")
+            
+        # 3. RETURN the history list
+        return loss_history
